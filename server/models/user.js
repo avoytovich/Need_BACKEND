@@ -11,20 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Ask, {
-        foreignKey: 'UserId'
+      User.hasMany(models.Need, {
+        foreignKey: 'owner_id'
       });
-      User.hasMany(models.Bid, {
-        foreignKey: 'UserId'
+      User.hasMany(models.Offer, {
+        foreignKey: 'owner_id'
       });
     }
   };
   User.init({
-    role: DataTypes.STRING,
-    username: DataTypes.STRING,
+    isAdmin: DataTypes.BOOLEAN,
+    isActivate: DataTypes.BOOLEAN,
+    nickname: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    isActivate: DataTypes.BOOLEAN
+    photo: DataTypes.BLOB,
   }, {
     sequelize,
     modelName: 'User',

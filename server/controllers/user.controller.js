@@ -33,8 +33,8 @@ module.exports = {
         } else {
           if (req.body.email === process.env.ADMIN_EMAIL) {
             User.create({
-              role: "admin",
-              username: null,
+              isAdmin: true,
+              nickname: null,
               email: req.body.email,
               password: passwordHash.generate(req.body.password),
               isActivate: true,
@@ -48,8 +48,8 @@ module.exports = {
             );
           } else {
             User.create({
-              role: "user",
-              username: null,
+              isAdmin: false,
+              nickname: null,
               email: req.body.email,
               password: passwordHash.generate(req.body.password),
               isActivate: false,

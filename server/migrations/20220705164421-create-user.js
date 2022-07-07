@@ -8,10 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      role: {
-        type: Sequelize.STRING
+      isAdmin: {
+        type: Sequelize.BOOLEAN
       },
-      username: {
+      isActivate: {
+        type: Sequelize.BOOLEAN
+      },
+      nickname: {
         type: Sequelize.STRING
       },
       email: {
@@ -20,8 +23,8 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      isActivate: {
-        type: Sequelize.BOOLEAN
+      photo: {
+        type: Sequelize.BLOB
       },
       createdAt: {
         allowNull: false,
