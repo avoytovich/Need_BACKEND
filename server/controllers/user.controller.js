@@ -1,7 +1,7 @@
 const passwordHash = require("password-hash");
 const jwt = require("jsonwebtoken");
 
-const secret = require("../config/jwt.secretkey");
+const secret = require("../../config/jwt.secretkey");
 const { User } = require("./../models");
 const { user: messages } = require("./../helper/messages");
 

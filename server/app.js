@@ -6,7 +6,7 @@ const cors = require('cors');
 // Set up the express app
 const app = express();
 
-const secret = require('./config/jwt.secretkey');
+const secret = require('../config/jwt.secretkey');
 const jwt = require('jsonwebtoken');
 
 const token = req => req.headers['x-access-token'];
