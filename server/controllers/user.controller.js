@@ -1,7 +1,7 @@
 const passwordHash = require("password-hash");
 const jwt = require("jsonwebtoken");
 
-const secret = require("../config/jwt.secretkey");
+const secret = require("../../config/jwt.secretkey");
 const { User } = require("./../models");
 const { user: messages } = require("./../helper/messages");
 
@@ -64,25 +64,25 @@ module.exports = {
       .catch((error) => res.status(401).send(error));
   },
 
-  activation(req, res) {
-    User.findById(req.body.id)
-      .then((user) => {
-        user.update({
-          isActivated: true,
-        });
-        res.status(200).json({ message: messages.activated });
-      })
-      .catch((error) => res.status(400).send(error));
-  },
+  // activation(req, res) {
+  //   User.findById(req.body.id)
+  //     .then((user) => {
+  //       user.update({
+  //         isActivated: true,
+  //       });
+  //       res.status(200).json({ message: messages.activated });
+  //     })
+  //     .catch((error) => res.status(400).send(error));
+  // },
 
-  deactivation(req, res) {
-    User.findById(req.body.id)
-      .then((user) => {
-        user.update({
-          isActivated: false,
-        });
-        res.status(200).json({ message: messages.deactivated });
-      })
-      .catch((error) => res.status(400).send(error));
-  },
+  // deactivation(req, res) {
+  //   User.findById(req.body.id)
+  //     .then((user) => {
+  //       user.update({
+  //         isActivated: false,
+  //       });
+  //       res.status(200).json({ message: messages.deactivated });
+  //     })
+  //     .catch((error) => res.status(400).send(error));
+  // },
 };

@@ -6,11 +6,11 @@ const cors = require('cors');
 // Set up the express app
 const app = express();
 
-const secret = require('./config/jwt.secretkey');
+const secret = require('../config/jwt.secretkey');
 const jwt = require('jsonwebtoken');
 
 const token = req => req.headers['x-access-token'];
-const tokenFreeURLs = ['/login'];
+const tokenFreeURLs = ['/login', '/needs'];
 const checkURL = baseUrl => tokenFreeURLs.some(URL => baseUrl.match(URL));
 const verifyToken = (token, res, req, next) => jwt.verify(token, secret.KEY, (err, decoded) =>
   err && res.status(401).json({message: 'token is not valid'}) ||
