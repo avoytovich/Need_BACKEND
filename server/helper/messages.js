@@ -8,6 +8,7 @@ module.exports = {
     notExist: "before you must sign up!"
   },
   need: {
+    created: "need was created",
     // alreadyExist: "email already exists",
     // soonActivate: "account will be activated",
     // successfulLogin: "you are logged",
