@@ -3,14 +3,14 @@ const { getPagination, getPagingData } = require('./../helper/pagination');
 const { need: messages } = require('./../helper/messages');
 
 module.exports = {
-  // create(req, res) {
-  //   const dataCreate = Object.assign({}, req.body, { UserId: req.decoded.id });
-  //   GroupOfBookmarks.create(dataCreate)
-  //     .then((groupOfBookmark) =>
-  //       res.status(200).json({ message: messages.created })
-  //     )
-  //     .catch((error) => res.status(404).send(error));
-  // },
+  create(req, res) {
+    const dataCreate = Object.assign({}, req.body, { owner_id: req.decoded.id });
+    Need.create(dataCreate)
+      .then((need) =>
+        res.status(200).json({ message: messages.created })
+      )
+      .catch((error) => res.status(404).send(error));
+  },
   // list(req, res) {
   //   Need.findAll({
   //     where: { owner_id: req.params.id },
