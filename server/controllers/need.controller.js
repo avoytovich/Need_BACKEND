@@ -1,4 +1,5 @@
-const { Need } = require('./../models');
+const { Need, Sequelize } = require('./../models');
+const { getPagination, getPagingData } = require('./../helper/pagination');
 const { need: messages } = require('./../helper/messages');
 
 module.exports = {
@@ -24,9 +25,20 @@ module.exports = {
   //     .catch((error) => res.status(404).send(error));
   // },
   getAll(req, res) {
+    const { page, size, title } = req.query;
+    const condition = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : null;
+    const { limit, offset } = getPagination(page, size);
+
     Need
-      .all()
-      .then((needs) => res.status(200).json({ needs }))
+      .findAndCountAll({
+        limit,
+        offset,
+        where: condition,
+      })
+      .then((needs) => {
+        const response = getPagingData(needs, page, limit);
+        res.status(200).send(response);
+      })
       .catch((error) => res.status(404).send(error));
   },
 };
