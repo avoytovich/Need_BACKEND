@@ -21,14 +21,13 @@ module.exports = {
                 token: jwt.sign({ id: user.id }, secret.KEY, {
                   expiresIn: secret.TIME_TOKEN,
                 }),
+                userId: user.id,
               });
             } else if (!user.isActivated) {
               return res.status(400).json({ message: messages.notActivated });
             }
-          } else if (user.isActivated) {
+          } else {
             return res.status(400).json({ message: messages.notValidPassword });
-          } else if (!user.isActivated) {
-            return res.status(400).json({ message: messages.notActivated });
           }
         } else {
           if (req.body.email === process.env.ADMIN_EMAIL) {

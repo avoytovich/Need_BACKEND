@@ -1,15 +1,16 @@
-const { Need } = require('./../models');
+const { Need, Sequelize } = require('./../models');
+const { getPagination, getPagingData } = require('./../helper/pagination');
 const { need: messages } = require('./../helper/messages');
 
 module.exports = {
-  // create(req, res) {
-  //   const dataCreate = Object.assign({}, req.body, { UserId: req.decoded.id });
-  //   GroupOfBookmarks.create(dataCreate)
-  //     .then((groupOfBookmark) =>
-  //       res.status(200).json({ message: messages.created })
-  //     )
-  //     .catch((error) => res.status(404).send(error));
-  // },
+  create(req, res) {
+    const dataCreate = Object.assign({}, req.body, { owner_id: req.decoded.id });
+    Need.create(dataCreate)
+      .then((need) =>
+        res.status(200).json({ message: messages.created })
+      )
+      .catch((error) => res.status(404).send(error));
+  },
   // list(req, res) {
   //   Need.findAll({
   //     where: { owner_id: req.params.id },
@@ -24,9 +25,20 @@ module.exports = {
   //     .catch((error) => res.status(404).send(error));
   // },
   getAll(req, res) {
+    const { page, size, title } = req.query;
+    const condition = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : null;
+    const { limit, offset } = getPagination(page, size);
+
     Need
-      .all()
-      .then((needs) => res.status(200).json({ needs }))
+      .findAndCountAll({
+        limit,
+        offset,
+        where: condition,
+      })
+      .then((needs) => {
+        const response = getPagingData(needs, page, limit);
+        res.status(200).send(response);
+      })
       .catch((error) => res.status(404).send(error));
   },
 };
