@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     owner_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Need',
+    modelName: 'Need'
   });
   return Need;
 };
