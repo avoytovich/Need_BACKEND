@@ -25,20 +25,33 @@ module.exports = {
   //     .catch((error) => res.status(404).send(error));
   // },
   getAll(req, res) {
-    const { page, size, title } = req.query;
-    const condition = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : null;
+    const { page, size, title, filter } = req.query;
+    
+    let condition;
+    if (title) {
+      condition = { title: { [Sequelize.Op.like]: `%${title}%` } };
+      if (filter) {
+        condition = { title: { [Sequelize.Op.like]: `%${title}%` }, status: filter };
+      }
+    } else {
+      condition = {};
+      if (filter) {
+        condition = { status: filter };
+      }
+    }
+
     const { limit, offset } = getPagination(page, size);
 
     Need
       .findAndCountAll({
         limit,
         offset,
-        where: condition,
+        where: condition
       })
       .then((needs) => {
         const response = getPagingData(needs, page, limit);
         res.status(200).send(response);
       })
       .catch((error) => res.status(404).send(error));
-  },
+  }
 };
