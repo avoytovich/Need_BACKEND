@@ -1,6 +1,6 @@
 const { 
   userController,
-  needController,
+  needController
 } = require('./../controllers');
 
 module.exports =
@@ -13,7 +13,8 @@ module.exports =
     // app.post('/user/:id/user_activate', userController.activation);
     // app.post('/user/:id/user_deactivate', userController.deactivation);
 
-    app.get('/needs', needController.getAll);
+    app.get('/needs', needController.getList);
+    app.get('/needs-all', needController.getAll);
     app.post('/needs/create', needController.create);
 
   };
