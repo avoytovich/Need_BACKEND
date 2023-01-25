@@ -11,6 +11,13 @@ module.exports = {
       )
       .catch((error) => res.status(404).send(error));
   },
+  getById(req, res) {
+    Need.findOne({
+      where: { id: req.params.id }
+    })
+      .then((need) => res.status(200).json({ need }))
+      .catch((error) => res.status(404).send(error));
+  },
   getAll(req, res) {
     Need.findAll()
       .then((needs) => res.status(200).json({ needs }))
