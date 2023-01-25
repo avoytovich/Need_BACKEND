@@ -14,6 +14,7 @@ module.exports =
     // app.post('/user/:id/user_deactivate', userController.deactivation);
 
     app.get('/needs', needController.getList);
+    app.get('/needs/:id', needController.getById);
     app.get('/needs-all', needController.getAll);
     app.post('/needs/create', needController.create);
 
