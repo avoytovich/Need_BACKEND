@@ -4,7 +4,7 @@ const { need: messages } = require('./../helper/messages');
 
 module.exports = {
   create(req, res) {
-    const dataCreate = Object.assign({}, req.body, { owner_id: req.decoded.id });
+    const dataCreate = Object.assign({}, req.body, { status: 'actual', owner_id: req.decoded.id });
     Need.create(dataCreate)
       .then((need) =>
         res.status(200).json({ message: messages.created })
