@@ -1,6 +1,7 @@
 const { 
   userController,
-  needController
+  needController,
+  offerController
 } = require('./../controllers');
 
 module.exports =
@@ -18,4 +19,6 @@ module.exports =
     app.get('/needs-all', needController.getAll);
     app.post('/needs/create', needController.create);
 
+    app.get('/offers-to-need', offerController.getListToNeed);
+    app.post('/offer/create', offerController.create);
   };
