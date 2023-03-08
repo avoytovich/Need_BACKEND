@@ -23,12 +23,11 @@ module.exports = {
       .then((needs) => res.status(200).json({ needs }))
       .catch((error) => res.status(404).send(error));
   },
-  // delete(req, res) {
-  //   const groupsIds = req.body.map((each) => each.id);
-  //   GroupOfBookmarks.destroy({ where: { id: groupsIds } })
-  //     .then((groups) => res.status(200).json({ groups }))
-  //     .catch((error) => res.status(404).send(error));
-  // },
+  delete(req, res) {
+    Need.destroy({ where: { id: req.params.id } })
+      .then((need) => res.status(200).json({ need }))
+      .catch((error) => res.status(404).send(error));
+  },
   getList(req, res) {
     const { page, size, title, filter } = req.query;
     

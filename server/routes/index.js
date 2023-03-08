@@ -15,9 +15,10 @@ module.exports =
     // app.post('/user/:id/user_deactivate', userController.deactivation);
 
     app.get('/needs', needController.getList);
-    app.get('/needs/:id', needController.getById);
     app.get('/needs-all', needController.getAll);
+    app.get('/needs/:id', needController.getById);
     app.post('/needs/create', needController.create);
+    app.delete('/needs/:id/delete', needController.delete);
 
     app.get('/offers-to-need', offerController.getListToNeed);
     app.post('/offer/create', offerController.create);
