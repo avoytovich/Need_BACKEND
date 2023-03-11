@@ -23,6 +23,18 @@ module.exports = {
       .then((needs) => res.status(200).json({ needs }))
       .catch((error) => res.status(404).send(error));
   },
+  update(req, res) {
+    const dataUpdate = Object.assign({}, req.body, { status: 'actual', owner_id: req.decoded.id });
+    Need.update(dataUpdate, {
+      where: {
+        id: req.params.id
+      }
+    })
+      .then((need) =>
+        res.status(200).json({ message: messages.updated })
+      )
+      .catch((error) => res.status(404).send(error));;
+  },
   delete(req, res) {
     Need.destroy({ where: { id: req.params.id } })
       .then((need) => res.status(200).json({ need }))
