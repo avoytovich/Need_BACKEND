@@ -18,6 +18,7 @@ module.exports =
     app.get('/needs-all', needController.getAll);
     app.get('/needs/:id', needController.getById);
     app.post('/needs/create', needController.create);
+    app.put('/needs/:id/update', needController.update);
     app.delete('/needs/:id/delete', needController.delete);
 
     app.get('/offers-to-need', offerController.getListToNeed);
