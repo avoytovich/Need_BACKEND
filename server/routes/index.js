@@ -11,8 +11,11 @@ module.exports =
     }));
 
     app.post('/login', userController.login);
-    // app.post('/user/:id/user_activate', userController.activation);
-    // app.post('/user/:id/user_deactivate', userController.deactivation);
+    app.get('/user/:id', userController.retrieve);
+    app.get('/user/:id/user_list', userController.list);
+    app.post('/user/:id/user_activate', userController.activation);
+    app.post('/user/:id/user_deactivate', userController.deactivation);
+    app.delete('/user/:id/user_delete', userController.delete);
 
     app.get('/needs', needController.getList);
     app.get('/needs-all', needController.getAll);

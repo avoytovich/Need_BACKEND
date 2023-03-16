@@ -5,7 +5,10 @@ module.exports = {
     successfulLogin: 'you are logged',
     notValidPassword: 'password isn\'t valid',
     notActivated: 'account isn\'t activated',
-    notExist: 'before you must sign up!'
+    notExist: 'before you must sign up!',
+    activated: 'user is activated',
+    deactivated: 'user is deactivated',
+    deleted: 'user is deleted'
   },
   need: {
     created: 'need was created',
