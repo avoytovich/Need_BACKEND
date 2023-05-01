@@ -1,7 +1,8 @@
 const { 
   userController,
   needController,
-  offerController
+  offerController,
+  chatController
 } = require('./../controllers');
 
 module.exports =
@@ -19,11 +20,16 @@ module.exports =
 
     app.get('/needs', needController.getList);
     app.get('/needs-all', needController.getAll);
+    app.get('/needs-all/:userId', needController.getAllByUserId);
     app.get('/needs/:id', needController.getById);
     app.post('/needs/create', needController.create);
     app.put('/needs/:id/update', needController.update);
     app.delete('/needs/:id/delete', needController.delete);
 
     app.get('/offers-to-need', offerController.getListToNeed);
+    app.put('/offer/:id/accept_reject', offerController.acceptOrReject);
     app.post('/offer/create', offerController.create);
+
+    app.get('/chat', chatController.getByNeedIdOfferId);
+    app.post('/chat/create_update', chatController.createOrUpdate);
   };
