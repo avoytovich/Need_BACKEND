@@ -1,4 +1,4 @@
-const { Need, Sequelize } = require('./../models');
+const { Need, Offer, Chat, Sequelize } = require('./../models');
 const { getPagination, getPagingData } = require('./../helper/pagination');
 const { need: messages } = require('./../helper/messages');
 
@@ -23,6 +23,13 @@ module.exports = {
       .then((needs) => res.status(200).json({ needs }))
       .catch((error) => res.status(404).send(error));
   },
+  getAllByUserId(req, res) {
+    Need.findAll({
+      where: { owner_id: req.params.userId }
+    })
+      .then((needs) => res.status(200).json({ needs }))
+      .catch((error) => res.status(404).send(error));
+  },
   update(req, res) {
     const dataUpdate = Object.assign({}, req.body, { status: 'actual', owner_id: req.decoded.id });
     Need.update(dataUpdate, {
@@ -36,8 +43,27 @@ module.exports = {
       .catch((error) => res.status(404).send(error));;
   },
   delete(req, res) {
-    Need.destroy({ where: { id: req.params.id } })
-      .then((need) => res.status(200).json({ need }))
+    Chat.findAll({ where: { need_id: req.params.id } })
+      .then((chats) => {
+        chats &&
+          chats.forEach((chat) => {
+            chat.destroy();
+          });
+        })
+      .then(() => {
+        Offer.findAll({ where: { need_id: req.params.id } })
+          .then((offers) => {
+            offers &&
+              offers.forEach((offer) => {
+                offer.destroy();
+              });
+            })
+          .then(() => {
+            Need.destroy({ where: { id: req.params.id } }).then((need) => {
+              res.status(200).json({ message: messages.deleted });
+            });
+          });
+      })
       .catch((error) => res.status(404).send(error));
   },
   getList(req, res) {
