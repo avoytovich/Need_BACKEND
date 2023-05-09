@@ -26,9 +26,12 @@ module.exports =
     app.put('/needs/:id/update', needController.update);
     app.delete('/needs/:id/delete', needController.delete);
 
+    app.get('/offers-to-user', offerController.getListToUser);
     app.get('/offers-to-need', offerController.getListToNeed);
     app.put('/offer/:id/accept_reject', offerController.acceptOrReject);
     app.post('/offer/create', offerController.create);
+    app.put('/offer/:id/update', offerController.update);
+    app.delete('/offer/:id/delete', offerController.delete);
 
     app.get('/chat', chatController.getByNeedIdOfferId);
     app.post('/chat/create_update', chatController.createOrUpdate);
