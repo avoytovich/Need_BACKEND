@@ -17,6 +17,7 @@ module.exports = {
   offer: {
     created: 'offer was created',
     updated: 'offer was updated',
+    deleted: 'offer is deleted',
     acceptionDenied: 'acception denied: accepted offer already exists for this need',
     rejectionDenied: 'rejection denied: offer could be reject if it is already accepted'
   },
