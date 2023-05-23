@@ -6,11 +6,24 @@ module.exports = {
     const { needId } = req.query;
 
     const dataCreate = Object.assign({}, req.body, { need_id: needId, owner_id: req.decoded.id });
-    Offer.create(dataCreate)
-      .then((offer) =>
-        res.status(200).json({ message: messages.created })
-      )
-      .catch((error) => res.status(404).send(error));
+    Offer.findOne({
+      where: {
+        need_id: needId
+      }
+    })
+    .then((offer) => {
+      if (!offer) {
+        Offer.create(dataCreate)
+          .then((offer) =>
+            res.status(200).json({ message: messages.created })
+          )
+          .catch((error) => res.status(404).send(error));
+      } else {
+        res.status(200).json({ message: messages.creationDenied });
+      }
+    }
+  )
+    .catch((error) => res.status(404).send(error));
   },
   acceptOrReject(req, res) {
     const dataUpdate = Object.assign({}, req.body);
@@ -89,15 +102,35 @@ module.exports = {
           });
         })
       .then(() => {
-        Offer.destroy({
+        Offer.findOne({
           where: {
             id: req.params.id
           }
         })
-          .then((offer) =>
-            res.status(200).json({ message: messages.deleted })
-          )
-          .catch((error) => res.status(404).send(error));
+         .then(offer => {
+            if (offer.isAccepted) {
+              Need.findOne({
+                where: {
+                  id: offer.need_id
+                }
+              })
+                .then((need) =>
+                need.update({status: 'actual'})
+              )
+              .catch((error) => res.status(404).send(error));
+            }
+            Offer.destroy({
+              where: {
+                id: req.params.id
+              }
+            })
+              .then((offer) =>
+                res.status(200).json({ message: messages.deleted })
+              )
+              .catch((error) => res.status(404).send(error));
+            
+         })
+         .catch((error) => res.status(404).send(error));
       })
       .catch((error) => res.status(404).send(error));
   },
