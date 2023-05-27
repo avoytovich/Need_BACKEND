@@ -2,3 +2,10 @@ node_modules
 build/
 config/
 .env
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+Need_BACKEND-master.zip
