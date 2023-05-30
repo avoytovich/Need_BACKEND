@@ -9,8 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode development --config webpack.config.js",
-    "start:dev": "npm run build && NODE_ENV=development nodemon ./server.js",
-    "start:prod": "NODE_ENV=production node ./server.js"
+    "start": "NODE_ENV=production node ./server.js",
+    "start:dev": "npm run build && NODE_ENV=development nodemon ./server.js"
   },
   "repository": {
     "type": "git",
