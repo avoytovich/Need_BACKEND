@@ -2,7 +2,6 @@ const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 
-const secret = require('../../config/jwt.secretkey');
 const { User, Need, Offer } = require('./../models');
 const { user: messages } = require('./../helper/messages');
 
@@ -19,8 +18,8 @@ module.exports = {
             if (user.isActivate) {
               return res.status(200).json({
                 message: messages.successfulLogin,
-                token: jwt.sign({ id: user.id }, secret.KEY, {
-                  expiresIn: secret.TIME_TOKEN
+                token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+                  expiresIn: process.env.TIME_TOKEN
                 }),
                 userId: user.id
               });
@@ -41,8 +40,8 @@ module.exports = {
             }).then((user) =>
               res.status(200).json({
                 message: messages.successfulLogin,
-                token: jwt.sign({ id: user.id }, secret.KEY, {
-                  expiresIn: secret.TIME_TOKEN
+                token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+                  expiresIn: process.env.TIME_TOKEN
                 })
               })
             );
