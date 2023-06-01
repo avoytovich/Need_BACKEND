@@ -34,7 +34,9 @@ app.use('*', (req, res, next) => {
 
 require('./routes')(app);
 
-require('dotenv').config();
+if(process.env.NODE_ENV === 'development') {
+  require('dotenv').config();
+}
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.
 app.get('*', (req, res) => res.status(200).send({
