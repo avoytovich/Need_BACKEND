@@ -25,11 +25,12 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('*', (req, res, next) => {
-  if (checkURL(req.baseUrl)) {
-    return next();
-  }
-  !token(req) && !checkURL(req.baseUrl) && res.status(401).json({message: 'no token'}) ||
-  token(req) && verifyToken(token(req), res, req, next);
+  return next();
+  // if (checkURL(req.baseUrl)) {
+  //   return next();
+  // }
+  // !token(req) && !checkURL(req.baseUrl) && res.status(401).json({message: 'no token'}) ||
+  // token(req) && verifyToken(token(req), res, req, next);
 });
 
 require('./routes')(app);
