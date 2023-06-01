@@ -9,14 +9,7 @@ const db = {};
 
 let sequelize;
 if (process.env.NODE_ENV === 'production') {
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    }
-  });
+  sequelize = new Sequelize(process.env.DATABASE_URL);
 } else {
   const config = require(__dirname + '/../../config/config.json')[env];
   sequelize = new Sequelize(config.database, config.username, config.password, config);
