@@ -17,6 +17,15 @@
     "operatorsAliases": false
   },
   "production": {
-    "use_env_variable": "DATABASE_URL"
+    "use_env_variable": "postgres://levanwork@ep-proud-poetry-470004.eu-central-1.aws.neon.tech/neondb",
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "ssl": true,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
