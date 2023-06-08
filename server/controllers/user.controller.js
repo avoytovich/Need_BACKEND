@@ -17,6 +17,7 @@ module.exports = {
           if (passwordHash.verify(req.body.password, user.password)) {
             if (user.isActivate) {
               return res.status(200).json({
+                isPrevUserCreated: true,
                 message: messages.successfulLogin,
                 token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
                   expiresIn: process.env.TIME_TOKEN
@@ -24,10 +25,16 @@ module.exports = {
                 userId: user.id
               });
             } else if (!user.isActivated) {
-              return res.status(200).json({ message: messages.notActivated });
+              return res.status(200).json({
+                isPrevUserCreated: true,
+                message: messages.notActivated
+              });
             }
           } else {
-            return res.status(200).json({ message: messages.notValidPassword });
+            return res.status(200).json({
+              isPrevUserCreated: true,
+              message: messages.notValidPassword
+            });
           }
         } else {
           if (req.body.email === process.env.ADMIN_EMAIL) {
@@ -39,6 +46,7 @@ module.exports = {
               isActivate: true
             }).then((user) =>
               res.status(200).json({
+                isPrevUserCreated: true,
                 message: messages.successfulLogin,
                 token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
                   expiresIn: process.env.TIME_TOKEN
@@ -46,17 +54,25 @@ module.exports = {
               })
             );
           } else {
-            User.create({
-              isAdmin: false,
-              nickname: null,
-              email: req.body.email,
-              password: passwordHash.generate(req.body.password),
-              isActivate: false
-            }).then((user) =>
-              res.status(200).json({
-                message: messages.soonActivate
-              })
-            );
+            if (!req.body.isPrevUserCreated) {
+              User.create({
+                isAdmin: false,
+                nickname: null,
+                email: req.body.email,
+                password: passwordHash.generate(req.body.password),
+                isActivate: false
+              }).then((user) =>
+                res.status(200).json({
+                  isPrevUserCreated: true,
+                  message: messages.soonActivate
+                })
+              );
+            } else {
+              return res.status(200).json({
+                isPrevUserCreated: true,
+                message: messages.alreadyCreated
+              });
+            }
           }
         }
       })
