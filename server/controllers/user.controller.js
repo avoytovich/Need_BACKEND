@@ -5,6 +5,8 @@ const { Op } = require('sequelize');
 const { User, Need, Offer } = require('./../models');
 const { user: messages } = require('./../helper/messages');
 
+const tokenList = {};
+
 module.exports = {
   login(req, res) {
     User.findOne({
@@ -16,12 +18,17 @@ module.exports = {
         if (user) {
           if (passwordHash.verify(req.body.password, user.password)) {
             if (user.isActivate) {
+              const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: process.env.TIME_REFRESH_TOKEN
+              });
+              tokenList[refreshToken] = refreshToken;
               return res.status(200).json({
                 isPrevUserCreated: true,
                 message: messages.successfulLogin,
                 token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
                   expiresIn: process.env.TIME_TOKEN
                 }),
+                refreshToken: refreshToken,
                 userId: user.id
               });
             } else if (!user.isActivated) {
@@ -44,15 +51,21 @@ module.exports = {
               email: req.body.email,
               password: passwordHash.generate(req.body.password),
               isActivate: true
-            }).then((user) =>
-              res.status(200).json({
+            }).then((user) => {
+              const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: process.env.TIME_REFRESH_TOKEN
+              });
+              tokenList[refreshToken] = refreshToken;
+              return res.status(200).json({
                 isPrevUserCreated: true,
                 message: messages.successfulLogin,
                 token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
                   expiresIn: process.env.TIME_TOKEN
-                })
-              })
-            );
+                }),
+                refreshToken: refreshToken,
+                userId: user.id
+              });
+            });
           } else {
             if (!req.body.isPrevUserCreated) {
               User.create({
@@ -77,6 +90,27 @@ module.exports = {
         }
       })
       .catch((error) => res.status(401).send(error));
+  },
+  refreshToken(req, res) {
+    // refresh the damn token
+    const postData = req.body;
+    // if refresh token exists
+    if (postData.refreshToken && postData.refreshToken in tokenList) {
+      const user = {
+        id: postData.id
+      };
+      const token = jwt.sign(user, process.env.JWT_SECRET_KEY, {
+        expiresIn: process.env.TIME_REFRESH_TOKEN
+      });
+      const response = {
+        token: token
+      };
+      // update the token in the list
+      delete tokenList[postData.refreshToken];
+      res.status(200).json(response);
+    } else {
+      res.status(403).send('Invalid request');
+    }
   },
   retrieve(req, res) {
     User.findOne({
