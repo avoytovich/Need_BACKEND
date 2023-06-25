@@ -12,6 +12,7 @@ module.exports =
     }));
 
     app.post('/login', userController.login);
+    app.post('/token', userController.refreshToken);
     app.get('/user/:id', userController.retrieve);
     app.get('/user/:id/user_list', userController.list);
     app.post('/user/:id/user_activate', userController.activation);

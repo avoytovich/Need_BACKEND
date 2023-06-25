@@ -9,7 +9,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 
 const token = req => req.headers['x-access-token'];
-const tokenFreeURLs = ['/login'];
+const tokenFreeURLs = ['/login', '/token'];
 const checkURL = baseUrl => tokenFreeURLs.some(URL => baseUrl.match(URL));
 const verifyToken = (token, res, req, next) => jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) =>
   err && res.status(401).json({message: 'token is not valid'}) ||
