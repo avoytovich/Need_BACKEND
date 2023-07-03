@@ -173,5 +173,21 @@ module.exports = {
           });
       })
       .catch((error) => res.status(404).send(error));
+  },
+  uploadAvatar(req, res) {
+    if (req.file.size > 5 * 1024) {
+      return res.status(400).json({ message: messages.uploadLimit });
+    }
+  
+    User.findOne({
+      where: { id: req.decoded.id }
+    })
+      .then((user) => {
+        user.update({
+          photo: Buffer.from(req.file.buffer)
+        });
+        res.status(200).json({ message: messages.uploadAvatar });
+      })
+      .catch((error) => res.status(404).send(error));
   }
 };
