@@ -8,7 +8,8 @@ module.exports = {
     const dataCreate = Object.assign({}, req.body, { need_id: needId, owner_id: req.decoded.id });
     Offer.findOne({
       where: {
-        need_id: needId
+        need_id: needId,
+        owner_id: req.decoded.id
       }
     })
     .then((offer) => {

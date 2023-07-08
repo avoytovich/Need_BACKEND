@@ -7,6 +7,7 @@ module.exports = {
     notActivated: 'account isn\'t activated',
     notExist: 'before you must sign up!',
     alreadyCreated: 'you have already created one',
+    updated: 'data is updated',
     activated: 'user is activated',
     deactivated: 'user is deactivated',
     deleted: 'user is deleted',

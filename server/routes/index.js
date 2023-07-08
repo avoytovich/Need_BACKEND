@@ -16,6 +16,7 @@ module.exports =
     app.post('/token', userController.refreshToken);
     app.get('/user/:id', userController.retrieve);
     app.get('/user/:id/user_list', userController.list);
+    app.put('/user/:id/update', userController.update);
     app.post('/user/:id/user_activate', userController.activation);
     app.post('/user/:id/user_deactivate', userController.deactivation);
     app.delete('/user/:id/user_delete', userController.delete);

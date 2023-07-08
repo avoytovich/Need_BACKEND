@@ -126,6 +126,16 @@ module.exports = {
       .then((users) => res.status(200).json({ users }))
       .catch((error) => res.status(404).send(error));
   },
+  update(req, res) {
+    const dataUpdate = Object.assign({}, req.body);
+    User.update(dataUpdate, {
+      where: {id: req.params.id}
+    })
+      .then((user) => {
+        res.status(200).json({ message: messages.updated });
+      })
+      .catch((error) => res.status(400).send(error));
+  },
   activation(req, res) {
     User.findOne({
       where: {id: req.body.id}
