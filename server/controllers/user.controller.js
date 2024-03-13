@@ -105,8 +105,6 @@ module.exports = {
       const response = {
         token: token
       };
-      // update the token in the list
-      delete tokenList[postData.refreshToken];
       res.status(200).json(response);
     } else {
       res.status(403).send('Invalid request');
