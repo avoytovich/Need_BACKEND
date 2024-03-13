@@ -6,9 +6,13 @@ module.exports = {
     notValidPassword: 'password isn\'t valid',
     notActivated: 'account isn\'t activated',
     notExist: 'before you must sign up!',
+    alreadyCreated: 'you have already created one',
+    updated: 'data is updated',
     activated: 'user is activated',
     deactivated: 'user is deactivated',
-    deleted: 'user is deleted'
+    deleted: 'user is deleted',
+    uploadAvatar: 'image uploaded successfully',
+    uploadLimit: 'image size exceeds the limit'
   },
   need: {
     created: 'need was created',

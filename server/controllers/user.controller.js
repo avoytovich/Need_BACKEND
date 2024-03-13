@@ -5,6 +5,8 @@ const { Op } = require('sequelize');
 const { User, Need, Offer } = require('./../models');
 const { user: messages } = require('./../helper/messages');
 
+const tokenList = {};
+
 module.exports = {
   login(req, res) {
     User.findOne({
@@ -16,18 +18,30 @@ module.exports = {
         if (user) {
           if (passwordHash.verify(req.body.password, user.password)) {
             if (user.isActivate) {
+              const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: process.env.TIME_REFRESH_TOKEN
+              });
+              tokenList[refreshToken] = refreshToken;
               return res.status(200).json({
+                isPrevUserCreated: true,
                 message: messages.successfulLogin,
                 token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
                   expiresIn: process.env.TIME_TOKEN
                 }),
+                refreshToken: refreshToken,
                 userId: user.id
               });
             } else if (!user.isActivated) {
-              return res.status(200).json({ message: messages.notActivated });
+              return res.status(200).json({
+                isPrevUserCreated: true,
+                message: messages.notActivated
+              });
             }
           } else {
-            return res.status(200).json({ message: messages.notValidPassword });
+            return res.status(200).json({
+              isPrevUserCreated: true,
+              message: messages.notValidPassword
+            });
           }
         } else {
           if (req.body.email === process.env.ADMIN_EMAIL) {
@@ -37,30 +51,64 @@ module.exports = {
               email: req.body.email,
               password: passwordHash.generate(req.body.password),
               isActivate: true
-            }).then((user) =>
-              res.status(200).json({
+            }).then((user) => {
+              const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: process.env.TIME_REFRESH_TOKEN
+              });
+              tokenList[refreshToken] = refreshToken;
+              return res.status(200).json({
+                isPrevUserCreated: true,
                 message: messages.successfulLogin,
                 token: jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
                   expiresIn: process.env.TIME_TOKEN
-                })
-              })
-            );
+                }),
+                refreshToken: refreshToken,
+                userId: user.id
+              });
+            });
           } else {
-            User.create({
-              isAdmin: false,
-              nickname: null,
-              email: req.body.email,
-              password: passwordHash.generate(req.body.password),
-              isActivate: false
-            }).then((user) =>
-              res.status(200).json({
-                message: messages.soonActivate
-              })
-            );
+            if (!req.body.isPrevUserCreated) {
+              User.create({
+                isAdmin: false,
+                nickname: null,
+                email: req.body.email,
+                password: passwordHash.generate(req.body.password),
+                isActivate: false
+              }).then((user) =>
+                res.status(200).json({
+                  isPrevUserCreated: true,
+                  message: messages.soonActivate
+                })
+              );
+            } else {
+              return res.status(200).json({
+                isPrevUserCreated: true,
+                message: messages.alreadyCreated
+              });
+            }
           }
         }
       })
       .catch((error) => res.status(401).send(error));
+  },
+  refreshToken(req, res) {
+    // refresh the damn token
+    const postData = req.body;
+    // if refresh token exists
+    if (postData.refreshToken && postData.refreshToken in tokenList) {
+      const user = {
+        id: postData.id
+      };
+      const token = jwt.sign(user, process.env.JWT_SECRET_KEY, {
+        expiresIn: process.env.TIME_REFRESH_TOKEN
+      });
+      const response = {
+        token: token
+      };
+      res.status(200).json(response);
+    } else {
+      res.status(403).send('Invalid request');
+    }
   },
   retrieve(req, res) {
     User.findOne({
@@ -75,6 +123,16 @@ module.exports = {
     })
       .then((users) => res.status(200).json({ users }))
       .catch((error) => res.status(404).send(error));
+  },
+  update(req, res) {
+    const dataUpdate = Object.assign({}, req.body);
+    User.update(dataUpdate, {
+      where: {id: req.params.id}
+    })
+      .then((user) => {
+        res.status(200).json({ message: messages.updated });
+      })
+      .catch((error) => res.status(400).send(error));
   },
   activation(req, res) {
     User.findOne({
@@ -121,6 +179,22 @@ module.exports = {
               res.status(200).json({ message: messages.deleted });
             });
           });
+      })
+      .catch((error) => res.status(404).send(error));
+  },
+  uploadAvatar(req, res) {
+    if (req.file.size > 5 * 1024) {
+      return res.status(400).json({ message: messages.uploadLimit });
+    }
+  
+    User.findOne({
+      where: { id: req.decoded.id }
+    })
+      .then((user) => {
+        user.update({
+          photo: Buffer.from(req.file.buffer)
+        });
+        res.status(200).json({ message: messages.uploadAvatar });
       })
       .catch((error) => res.status(404).send(error));
   }

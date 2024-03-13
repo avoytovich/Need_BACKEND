@@ -1,3 +1,4 @@
+const multer = require('multer');
 const { 
   userController,
   needController,
@@ -12,11 +13,17 @@ module.exports =
     }));
 
     app.post('/login', userController.login);
+    app.post('/token', userController.refreshToken);
     app.get('/user/:id', userController.retrieve);
     app.get('/user/:id/user_list', userController.list);
+    app.put('/user/:id/update', userController.update);
     app.post('/user/:id/user_activate', userController.activation);
     app.post('/user/:id/user_deactivate', userController.deactivation);
     app.delete('/user/:id/user_delete', userController.delete);
+    
+    const storage = multer.memoryStorage();
+    const upload = multer({ storage });
+    app.post('/upload-avatar', upload.single('avatar'), userController.uploadAvatar);
 
     app.get('/needs', needController.getList);
     app.get('/needs-all', needController.getAll);
